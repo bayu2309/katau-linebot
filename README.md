@@ -1,12 +1,15 @@
 # Katou-LINEBot
 Bot for LINE
 
+change the API key in constant.js
+change the config key in config.js
 
 run
 ```
 npm install
 npm run build
 ```
+
 after that change this from the .gitignore
 ```
 /build
