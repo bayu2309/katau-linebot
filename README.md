@@ -1,8 +1,7 @@
 # Katou-LINEBot
 Bot for LINE
 
-change the API key in constant.js
-change the config key in config.js
+change the API key in constant.js and change the config key in config.js
 
 run
 ```
