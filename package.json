@@ -1,0 +1,38 @@
+{
+  "name": "katouversion2-nodejs",
+  "version": "1.0.0",
+  "description": "katouversion2-nodejs",
+  "main": "bot.js",
+  "engines": {
+    "node": "8.9.1",
+    "npm": "5.5.1"
+  },
+  "scripts": {
+    "start": "node build/bot.js",
+    "build": "babel src -d build"
+  },
+  "keywords": [
+    "BOT",
+    "Line",
+    "Messaging",
+    "API"
+  ],
+  "author": "Akmal Maulana Azzam",
+  "license": "ISC",
+  "dependencies": {
+    "@line/bot-sdk": "^5.0.1",
+    "animequote": "^1.1.1",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.2",
+    "g-i-s": "^2.1.1",
+    "osu": "^2.0.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "youtube-search": "^1.0.10",
+    "ytdl-core": "^0.18.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  }
+}
