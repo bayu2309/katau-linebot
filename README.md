@@ -1,4 +1,4 @@
-# Katou-LineBot
+# Katou-LINEBot
 Bot for LINE
 
 
