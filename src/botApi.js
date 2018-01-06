@@ -240,33 +240,33 @@ export default function BotApi() {
       });
     });
   }
+// No longer working !
+//   this.get9GAG = function(keyword) {
+//     return new Promise((resolve, reject) => {
+//       let options = {
+//         uri: `${ constAPI.$9GAG_URL }${ keyword }`
+//       }
 
-  this.get9GAG = function(keyword) {
-    return new Promise((resolve, reject) => {
-      let options = {
-        uri: `${ constAPI.$9GAG_URL }${ keyword }`
-      }
+//       rp(options).then(result => {
+//         const $ = cheerio.load(result);
+//         let badgeImg = $(".badge-item-img");
+//         let item = [];
 
-      rp(options).then(result => {
-        const $ = cheerio.load(result);
-        let badgeImg = $(".badge-item-img");
-        let item = [];
+//         for(let i = 0; i < badgeImg.length; i++) {
+//           item.push({
+//             memeTitle: badgeImg.eq(i).attr("alt"),
+//             memeImg: badgeImg.eq(i).attr("src")
+//           });
+//         }
 
-        for(let i = 0; i < badgeImg.length; i++) {
-          item.push({
-            memeTitle: badgeImg.eq(i).attr("alt"),
-            memeImg: badgeImg.eq(i).attr("src")
-          });
-        }
+//         let randIndex = Math.round(Math.random() * item.length);
 
-        let randIndex = Math.round(Math.random() * item.length);
-
-        resolve(item[randIndex]);
-      }).catch(err => {
-        reject(`Request gagal atau section ${ keyword } tidak ditemukan`);
-      })
-    });
-  }
+//         resolve(item[randIndex]);
+//       }).catch(err => {
+//         reject(`Request gagal atau section ${ keyword } tidak ditemukan`);
+//       })
+//     });
+//   }
 
   this.getUrlYoutube = function(keyword) {
     return new Promise((resolve, reject) => {
