@@ -166,18 +166,18 @@ export default class HandleEvent {
 //         });
 //       }
 
-      if(msgText.includes("katou 9gag")) {
-        let keyword = msgText.substr(11);
-        keyword = keyword.replace(/\s/g, "");
+//       if(msgText.includes("katou 9gag")) {
+//         let keyword = msgText.substr(11);
+//         keyword = keyword.replace(/\s/g, "");
 
-        if(keyword.length <= 0) return client.replyMessage(replyToken, Wrapper.replyText("Silahkan masukan sectionnya"));
+//         if(keyword.length <= 0) return client.replyMessage(replyToken, Wrapper.replyText("Silahkan masukan sectionnya"));
 
-        botApi.get9GAG(keyword).then(result => {
-          return client.replyMessage(replyToken, [ Wrapper.replyText(result.memeTitle), Wrapper.replyImg(result.memeImg, result.memeImg) ]).catch(err => console.log(err));
-        }).catch(err => {
-          return client.replyMessage(replyToken, Wrapper.replyText(err));
-        });
-      }
+//         botApi.get9GAG(keyword).then(result => {
+//           return client.replyMessage(replyToken, [ Wrapper.replyText(result.memeTitle), Wrapper.replyImg(result.memeImg, result.memeImg) ]).catch(err => console.log(err));
+//         }).catch(err => {
+//           return client.replyMessage(replyToken, Wrapper.replyText(err));
+//         });
+//       }
 
       if(msgText.includes("katou download musik")) {
         let keyword = msgText.substr(21).trim();
