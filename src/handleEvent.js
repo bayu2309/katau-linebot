@@ -157,14 +157,14 @@ export default class HandleEvent {
            return client.replyMessage(replyToken, Wrapper.replyText("Silahkan masukan teks yang ingin diubah"))
         });
       }
-
-      if(msgText === "katou 9gag") {
-        botApi.get9GAG("hot").then(result => {
-          return client.replyMessage(replyToken, [ Wrapper.replyText(result.memeTitle), Wrapper.replyImg(result.memeImg, result.memeImg) ]).catch(err => console.log(err));
-        }).catch(err => {
-          return client.replyMessage(replyToken, Wrapper.replyText(err));
-        });
-      }
+// No longer working !
+//       if(msgText === "katou 9gag") {
+//         botApi.get9GAG("hot").then(result => {
+//           return client.replyMessage(replyToken, [ Wrapper.replyText(result.memeTitle), Wrapper.replyImg(result.memeImg, result.memeImg) ]).catch(err => console.log(err));
+//         }).catch(err => {
+//           return client.replyMessage(replyToken, Wrapper.replyText(err));
+//         });
+//       }
 
       if(msgText.includes("katou 9gag")) {
         let keyword = msgText.substr(11);
