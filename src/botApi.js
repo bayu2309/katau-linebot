@@ -132,13 +132,23 @@ export default function BotApi() {
             thumbnail: result[randomIndex].thumbnails.default.url
           }
 
+          console.log(resultVideo.link);
           ytdlCore.getInfo(resultVideo.link, {}, (err, info) => {
-            for(let i = 0; i < info.formats.length; i++){
-              if(info.formats[i].container === "mp4") {
-                resultVideo.videoUrl = info.formats[i].url;
+            console.log(info);
+            if (err){
+              resultVideo.videoUrl = "undefined"; 
+              resolve(resultVideo);
+            } else if (info == undefined) { 
+              resultVideo.videoUrl = "undefined"; 
+              resolve(resultVideo);
+            } else {
+              for(let i = 0; i < info.formats.length; i++){
+                if(info.formats[i].container === "mp4") {
+                  resultVideo.videoUrl = info.formats[i].url;
 
-                resolve(resultVideo);
-                break;
+                  resolve(resultVideo);
+                  break;
+                }
               }
             }
           });
