@@ -101,13 +101,14 @@ export default class HandleEvent {
         if (keyword.length <= 0) return client.replyMessage(replyToken, Wrapper.replyText("Silahkan masukan nama video yang ingin dicari"));
 
         botApi.getVideo(keyword).then(result => {
-          if(source !== 'room' && source !== 'group') return client.replyMessage(replyToken, [ Wrapper.replyText(result.title), Wrapper.replyVideo(result.videoUrl, result.thumbnail) ])
+          if(source !== 'room' && source !== 'group') return client.replyMessage(replyToken, Wrapper.replyText(`${ result.title } \n ${ result.link }`)).catch(console.log("Error"));
 
-          return client.replyMessage(replyToken, [ Wrapper.replyText(`${ result.title } \n ${ result.link }`), Wrapper.replyButtonURLConfirm("Download the video", "Download", result.videoUrl) ]);
+          return client.replyMessage(replyToken, Wrapper.replyText(`${ result.title } \n ${ result.link }`)).catch(console.log("Error"));
         }).catch(err => {
-          return client.replyMessage(replyToken, Wrapper.replyText(err));
+          return client.replyMessage(replyToken, Wrapper.replyText(err)).catch(console.log("Error"));
         });
       }
+
 
       if(msgText.includes("katou stalk")) {
         let keyword = msgText.substr(12);
