@@ -165,20 +165,19 @@ export default function BotApi() {
       }
 
       rp(options).then(result => {
-        let user = result.user;
-        let media = result.user.media;
-        let nodes = media.nodes;
+        let graphql = result.graphql;
 
-        let count = media.count;
-        let username = user.username;
-        let followers = user.followed_by;
-        let follows = user.follows;
+        let username = graphql.user.username;
+        let followers = graphql.user.edge_followed_by;
+        let follows = graphql.user.edge_follow;
         let followersCount = followers.count;
         let followingCount = follows.count;
-        let profile_pic = user.profile_pic_url;
-        let is_private = user.is_private;
+        let profile_pic = graphql.user.profile_pic_url;
+        let is_private = graphql.user.is_private;
         let profile_url = "https://www.instagram.com/" + username;
-
+        let media = graphql.user.edge_owner_to_timeline_media;
+        let count = media.count;
+        
         let deskripsi_profil = "Following : " + followingCount + "\nFollowers : " + followersCount;
 
         let instagramInfo = { username, profile_pic, profile_url, deskripsi_profil }
@@ -186,11 +185,11 @@ export default function BotApi() {
         if (count != 0 && is_private != true) {
           instagramInfo.tertutup = false;
 
-          let items = nodes[0];
-          let src = items.thumbnail_src;
-          let code = "https://www.instagram.com/p/" + items.code;
-          let commentCount = items.comments.count;
-          let likeCount = items.likes.count;
+          let items = media.edges[0].node;
+          let src = items.displayUrl;
+          let code = "https://www.instagram.com/p/" + items.shortcode;
+          let commentCount = items.edge_media_to_comment.count;
+          let likeCount = items.edge_liked_by.count;
           let deskripsi_post = "Likes : " + likeCount + "\nComments : " + commentCount;
 
           instagramInfo.src = src;
@@ -203,6 +202,7 @@ export default function BotApi() {
           resolve(instagramInfo);
         }
       }).catch(err => {
+        console.log(err);
         reject(`Gagal menemukan user instagram dengan id : ${ keyword }`);
       });
     });
@@ -329,6 +329,7 @@ export default function BotApi() {
       rp(options).then(result => {
         resolve(result);
       }).catch(err => {
+       
         reject("Request gagal atau tidak dapat menghitung persentase pasangan");
       });
     });

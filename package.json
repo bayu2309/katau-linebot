@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "node build/bot.js",
-    "build": "babel src -d build"
+    "build": "babel src -d build",
+    "dev": "babel-node src/botApi.js"
   },
   "keywords": [
     "BOT",
