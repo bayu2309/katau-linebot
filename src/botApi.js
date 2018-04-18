@@ -5,6 +5,7 @@ import ytdlCore from 'ytdl-core';
 import cheerio from 'cheerio';
 import animequote from 'animequote';
 import * as osu from 'osu';
+import puppeteer from 'puppeteer';
 
 import constAPI from './constants';
 
@@ -159,52 +160,85 @@ export default function BotApi() {
 
   this.getInstagramInfo = function(keyword) {
     return new Promise((resolve, reject) => {
-      let options = {
-        uri: `${ constAPI.INSTAGRAM_URL }${ keyword }${ constAPI.INSTAGRAM_QUERY }`,
-        json: true
-      }
+      puppeteer.launch()
+        .then(browser => browser)
+        .then(browser => browser.newPage())
+        .then(page => { 
+          Promise.all([
+            page.goto(`${ constAPI.INSTAGRAM_URL }${ keyword }`),
+          ]).then(() => {
+            page.content().then(html => {
+              const $ = cheerio.load(html);
+              let username = $('._ienqf').children().first().text();
+              let followersCount = $('._fd86t').eq(0).text();
+              let followingCount = $('._fd86t').eq(1).text();
+              let profile_pic = $('._rewi8').attr('src');
+              if(profile_pic === undefined) reject('Tidak menemukan user instagram dengan id : ' + keyword);
+              let profile_url = "https://www.instagram.com/" + username;
+              let post = $('._2di5p').eq(0).attr('src');
+              let is_private = (!post) ? true : false;
+              
+              let mouse = page.mouse;
 
-      rp(options).then(result => {
-        let graphql = result.graphql;
+              let count = $('._2di5p').length;
+              
+              let deskripsi_profil = "Following : " + followingCount + "\nFollowers : " + followersCount;
+              
+              let instagramInfo = { username, profile_pic, profile_url, deskripsi_profil }
 
-        let username = graphql.user.username;
-        let followers = graphql.user.edge_followed_by;
-        let follows = graphql.user.edge_follow;
-        let followersCount = followers.count;
-        let followingCount = follows.count;
-        let profile_pic = graphql.user.profile_pic_url;
-        let is_private = graphql.user.is_private;
-        let profile_url = "https://www.instagram.com/" + username;
-        let media = graphql.user.edge_owner_to_timeline_media;
-        let count = media.count;
-        
-        let deskripsi_profil = "Following : " + followingCount + "\nFollowers : " + followersCount;
+              if (count != 0 && is_private != true) {
+                    instagramInfo.tertutup = false;
 
-        let instagramInfo = { username, profile_pic, profile_url, deskripsi_profil }
-
-        if (count != 0 && is_private != true) {
-          instagramInfo.tertutup = false;
-
-          let items = media.edges[0].node;
-          let src = items.displayUrl;
-          let code = "https://www.instagram.com/p/" + items.shortcode;
-          let commentCount = items.edge_media_to_comment.count;
-          let likeCount = items.edge_liked_by.count;
-          let deskripsi_post = "Likes : " + likeCount + "\nComments : " + commentCount;
-
-          instagramInfo.src = src;
-          instagramInfo.deskripsi_post = deskripsi_post;
-          instagramInfo.code = code;
-
-          resolve(instagramInfo);
-        } else {
-          instagramInfo.tertutup = true;
-          resolve(instagramInfo);
-        }
-      }).catch(err => {
-        console.log(err);
-        reject(`Gagal menemukan user instagram dengan id : ${ keyword }`);
-      });
+                    page.click('._cqw45 span').then(() => {
+                      Promise.all([
+                        page.hover('._mck9w, ._gvoze, ._tn0ps'),
+                        mouse.move(1,1)
+                      ]).then(() => {
+                        page.content().then(html2 => {
+                          const $2 = cheerio.load(html2);
+    
+                          let src = post;
+                          let code = "https://www.instagram.com" + $('._e3il2').eq(0).parent().attr('href');
+                          let commentCount = $2('._mli86').children().children().eq(1).children().eq(0).text();
+                          let likeCount = $2('._mli86').children().children().eq(0).children().eq(0).text();
+                          let deskripsi_post = "Likes : " + likeCount + "\nComments : " + commentCount;
+    
+                          instagramInfo.src = src;
+                          instagramInfo.deskripsi_post = deskripsi_post;
+                          instagramInfo.code = code;
+                          
+                          resolve(instagramInfo);
+                        }).catch(e => console.log(e));
+                      }).catch(e => reject('Error: Silahkan coba lagi'));
+                    }).catch(e => { 
+                      Promise.all([
+                        page.hover('._mck9w, ._gvoze, ._tn0ps'),
+                        mouse.move(1, 1)
+                      ]).then(() => {
+                        page.content().then(html2 => {
+                          const $2 = cheerio.load(html2);
+    
+                          let src = post;
+                          let code = "https://www.instagram.com" + $('._e3il2').eq(0).parent().attr('href');
+                          let commentCount = $2('._mli86').children().children().eq(1).children().eq(0).text();
+                          let likeCount = $2('._mli86').children().children().eq(0).children().eq(0).text();
+                          let deskripsi_post = "Likes : " + likeCount + "\nComments : " + commentCount;
+    
+                          instagramInfo.src = src;
+                          instagramInfo.deskripsi_post = deskripsi_post;
+                          instagramInfo.code = code;
+                          
+                          resolve(instagramInfo);
+                        }).catch(e => console.log(e));
+                      }).catch(e => console.log(e));
+                    }).catch(e => console.log(e));
+              } else {
+                instagramInfo.tertutup = true;
+                resolve(instagramInfo);
+              }
+            }).catch(e => console.log(e));
+          }).catch(e => console.log(e)); 
+        }).catch(e => console.log(e));
     });
   }
 
@@ -250,6 +284,7 @@ export default function BotApi() {
       });
     });
   }
+
 // No longer working !
 //   this.get9GAG = function(keyword) {
 //     return new Promise((resolve, reject) => {
@@ -391,3 +426,7 @@ export default function BotApi() {
     });
   }
 }
+
+// let botApp = new BotApi();
+
+// botApp.getInstagramInfo('_rehre').then(res => console.log(res)).catch(e => console.log(e));
