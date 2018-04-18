@@ -5,7 +5,6 @@ const constAPI = {
   "OPENWEATHERMAP_APPID" : "",
   "GOOGLECLOUDAPI_KEY": "",
   "INSTAGRAM_URL": "https://www.instagram.com/",
-  "INSTAGRAM_QUERY": "/?__a=1",
   "YANDEXTRANSLATE_URL": "https://translate.yandex.net/api/v1.5/tr/translate?key=",
   "YANDEXTRANSLATE_KEY": "",
   "YANDEXTEXT_QUERY": "&text=",
