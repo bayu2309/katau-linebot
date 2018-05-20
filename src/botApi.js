@@ -133,7 +133,6 @@ export default function BotApi() {
             thumbnail: result[randomIndex].thumbnails.default.url
           }
 
-          console.log(resultVideo.link);
           ytdlCore.getInfo(resultVideo.link, {}, (err, info) => {
             console.log(info);
             if (err){
@@ -157,11 +156,16 @@ export default function BotApi() {
       });
     });
   }
-
+  //using puppeteer and hard to do
   this.getInstagramInfo = function(keyword) {
     return new Promise((resolve, reject) => {
-      puppeteer.launch()
-        .then(browser => browser)
+      let browserVar = "";
+
+      puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']}) //must added no-sandbox before deploy
+        .then(browser => { 
+          browserVar = browser;
+          return browser;
+        })
         .then(browser => browser.newPage())
         .then(page => { 
           Promise.all([
@@ -170,8 +174,8 @@ export default function BotApi() {
             page.content().then(html => {
               const $ = cheerio.load(html);
               let username = $('._ienqf').children().first().text();
-              let followersCount = $('._fd86t').eq(0).text();
-              let followingCount = $('._fd86t').eq(1).text();
+              let followersCount = $('._fd86t').eq(1).text();
+              let followingCount = $('._fd86t').eq(0).text();
               let profile_pic = $('._rewi8').attr('src');
               if(profile_pic === undefined) reject('Tidak menemukan user instagram dengan id : ' + keyword);
               let profile_url = "https://www.instagram.com/" + username;
@@ -207,8 +211,10 @@ export default function BotApi() {
                           instagramInfo.deskripsi_post = deskripsi_post;
                           instagramInfo.code = code;
                           
-                          resolve(instagramInfo);
-                        }).catch(e => console.log(e));
+                          return browserVar.close();
+                        })
+                        .then(() => resolve(instagramInfo))
+                        .catch(e => console.log(e));
                       }).catch(e => reject('Error: Silahkan coba lagi'));
                     }).catch(e => { 
                       Promise.all([
@@ -228,8 +234,10 @@ export default function BotApi() {
                           instagramInfo.deskripsi_post = deskripsi_post;
                           instagramInfo.code = code;
                           
-                          resolve(instagramInfo);
-                        }).catch(e => console.log(e));
+                          return browserVar.close();
+                        })
+                        .then(() => resolve(instagramInfo))
+                        .catch(e => console.log(e));
                       }).catch(e => console.log(e));
                     }).catch(e => console.log(e));
               } else {
